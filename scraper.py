@@ -1,4 +1,4 @@
-import fileinput, argparse
+import sys, fileinput, argparse
 from listennotes import podcast_api
 
 # If api_key is None, the sdk will connect to a mock server that'll
@@ -24,16 +24,20 @@ def get_episodes(term: str):
   return response.json()
 
 def main():
+  stdout_copy = sys.stdout
   args = parse_args()
-
-  for line in fileinput.input(files=(args["filename"]), encoding="utf-8"):
-    data = get_episodes(f"\"{line}\"") if args("keyword") else get_episodes(line)
-    for episode in data["results"]:
-      podcast_name = episode["podcast"]["title_original"]
-      episode_name = episode["title_original"]
-      link = episode["listennotes_url"]
-      print(f"{podcast_name} (podcast): \"{episode_name}\" ({link})")
-      print()
+  with open("search_results.txt", "w") as sys.stdout:
+    for line in fileinput.input(files=(args["filename"]), encoding="utf-8"):
+      print(f"SEARCH RESULTS FOR: {line}")
+      data = get_episodes(f"\"{line}\"") if args("keyword") else get_episodes(line)
+      for episode in data["results"]:
+        podcast_name = episode["podcast"]["title_original"]
+        episode_name = episode["title_original"]
+        link = episode["listennotes_url"]
+        print(f"{podcast_name} (podcast): \"{episode_name}\" ({link})")
+        print()
+      print("----------------------------------------------------------------")
+  sys.stdout = stdout_copy
 
 if __name__ == "__main__":
   main()
