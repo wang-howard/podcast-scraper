@@ -8,11 +8,10 @@ client = podcast_api.Client(api_key=api_key)
 
 def parse_args():
   parser = argparse.ArgumentParser(
-    description="Simple podcast episode scraper for search key terms using Listen Notes API",
+    description="Simple podcast episode scraper for search terms using Listen Notes API",
     allow_abbrev=False)
-  parser.add_argument("filename",
-    help="the file containing a list of search terms")
-  parser.add_argument("--exact")
+  parser.add_argument("filename", help="the file containing a list of search terms")
+  parser.add_argument("-k", "--keyword", action="store_true", help="search for keywords instead of exact phrase")
   return parser.parse_args()
 
 def get_episodes(term: str):
@@ -25,10 +24,10 @@ def get_episodes(term: str):
   return response.json()
 
 def main():
-  parser = parse_args()
-  
-  for line in fileinput.input(encoding="utf-8"):
-    data = get_episodes(line)
+  args = parse_args()
+
+  for line in fileinput.input(files=(args["filename"]), encoding="utf-8"):
+    data = get_episodes(f"\"{line}\"") if args("keyword") else get_episodes(line)
     for episode in data["results"]:
       podcast_name = episode["podcast"]["title_original"]
       episode_name = episode["title_original"]
