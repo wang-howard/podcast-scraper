@@ -1,2 +1,4 @@
 # podcast-scraper
-Simple search for podcast episodes using Listennotes API
+Simple scraper for podcast episodes using Listennotes API
+
+Powered by Listen Notes
