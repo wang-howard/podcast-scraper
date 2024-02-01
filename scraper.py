@@ -27,9 +27,9 @@ def main():
   stdout_copy = sys.stdout
   args = parse_args()
   with open("search_results.txt", "w") as sys.stdout:
-    for line in fileinput.input(files=(args["filename"]), encoding="utf-8"):
+    for line in fileinput.input(files=(args.filename), encoding="utf-8"):
       print(f"SEARCH RESULTS FOR: {line}")
-      data = get_episodes(f"\"{line}\"") if args("keyword") else get_episodes(line)
+      data = get_episodes(line)
       for episode in data["results"]:
         podcast_name = episode["podcast"]["title_original"]
         episode_name = episode["title_original"]
